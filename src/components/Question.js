@@ -1,9 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function Question({ question, onAnswered }) {
   const [timeRemaining, setTimeRemaining] = useState(10);
 
-  // add useEffect code
+  // ✅ useEffect to handle the countdown timer
+  useEffect(() => {
+    if (timeRemaining === 0) {
+      setTimeRemaining(10); // Reset timer for the next question
+      onAnswered(false); // Trigger incorrect answer
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setTimeRemaining((prevTime) => prevTime - 1);
+    }, 1000);
+
+    // ✅ Cleanup function to clear timeout when component unmounts or state changes
+    return () => clearTimeout(timer);
+  }, [timeRemaining, onAnswered]);
 
   function handleAnswer(isCorrect) {
     setTimeRemaining(10);
